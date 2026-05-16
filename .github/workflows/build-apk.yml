@@ -1,0 +1,48 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Permite rodar manualmente
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Instalar pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Instalar dependências
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Instalar EAS CLI
+        run: pnpm add -g eas-cli
+
+      - name: Build APK com EAS (Cloud)
+        env:
+          EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
+        run: |
+          eas build --platform android --profile production --non-interactive
+
+      - name: Upload logs como artefato
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: |
+            *.log
+            build/
