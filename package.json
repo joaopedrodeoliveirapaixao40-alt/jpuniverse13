@@ -1,0 +1,15 @@
+{
+  "name": "jpuniverse",
+  "version": "1.0.0",
+  "description": "JP Universe - IA de Games em APK",
+  "main": "index.js",
+  "scripts": {
+    "build": "cordova build android --release",
+    "dev": "cordova run android",
+    "clean": "cordova clean"
+  },
+  "devDependencies": {
+    "cordova": "^12.0.0",
+    "cordova-android": "^12.0.0"
+  }
+}
